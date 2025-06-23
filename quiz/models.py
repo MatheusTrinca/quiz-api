@@ -6,14 +6,22 @@ from django.utils.translation import gettext_lazy as _
 class Category(models.Model):
     name = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
+
     def __str__(self):
         return self.name
 
 
-class Quizzes(models.Model):
+class Quizz(models.Model):
     title = models.CharField(max_length=255, default=_("New Quiz"))
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, default=1)
     date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Quizz")
+        verbose_name_plural = _("Quizzes")
 
     def __str__(self):
         return self.title
@@ -28,10 +36,10 @@ class Question(models.Model):
         (4, _("Expert")),
     )
 
-    TYPE = (0, _("Multiple Choice"))
+    TYPE = ((0, _("Multiple Choice")),)
 
     quiz = models.ForeignKey(
-        Quizzes, related_name="question", on_delete=models.DO_NOTHING
+        Quizz, related_name="question", on_delete=models.DO_NOTHING
     )
     technique = models.IntegerField(
         choices=TYPE, default=0, verbose_name=_("Type of Question")
@@ -49,7 +57,7 @@ class Question(models.Model):
         return self.title
 
 
-class Answers(models.Model):
+class Answer(models.Model):
     question = models.ForeignKey(
         Question, related_name="answer", on_delete=models.DO_NOTHING
     )
